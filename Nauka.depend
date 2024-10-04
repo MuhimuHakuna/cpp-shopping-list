@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1727975465 source:c:\users\narzekacz\documents\nauka\main.cpp
+	<iostream>
+	<fstream>
+	<cstdlib>
+	<string>
+
