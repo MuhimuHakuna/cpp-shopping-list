@@ -5,49 +5,51 @@
 
 using namespace std;
 
-string produkt;
+string product;
 int menu;
 
-void wyswietlListeProduktow(string nazwaPliku)
+void showproductlist(string filename)
 {
-    string linia;
+    string line;
     int nr = 1;
-    fstream plik;
-    plik.open(nazwaPliku, ios::in);
-    if (plik.good() == false)
+    fstream file;
+    file.open(filename, ios::in);
+    if (file.good() == false)
     {
-        cout << "Lista zakupow nie istnieje!" << endl;
+        cout << "Shopping list does not exist!" << endl;
         exit(0);
     }
 
-    cout << "Lista zakupow:" << endl;
-    while (getline(plik, linia))
+    cout << "Shopping list:" << endl;
+    while (getline(file, line))
     {
-        cout << nr << ". " << linia << endl;
+        cout << nr << ". " << line << endl;
         nr++;
     }
-    plik.close();
+    file.close();
 }
 
 int main()
 {
-    cout << "Stworz swoja liste zakupow!" << endl;
+    cout << "Create your shopping list!" << endl;
     cout << " " << endl;
 
     for(;;)
     {
+        system("pause");
+        system("cls");
         cout << " " << endl;
         cout << "Menu:" << endl;
         cout << " " << endl;
-        cout << "1.Dodaj nowy produkt do listy" << endl;
-        cout << "2.Usun produkt z listy" << endl;
-        cout << "3.Zobacz liste zakupow" << endl;
-        cout << "4.Oznacz produkt jako kupiony" << endl;
-        cout << "5.Oznacz produkt jako niekupiony" << endl;
-        cout << "6.Usun cala liste" << endl;
-        cout << "7.Zamknij program" << endl;
+        cout << "1.Add a new product to the list" << endl;
+        cout << "2.Remove product from list" << endl;
+        cout << "3. View shopping list" << endl;
+        cout << "4.Mark the product as purchased" << endl;
+        cout << "5.Mark the product as unpurchased" << endl;
+        cout << "6.Delete the entire list" << endl;
+        cout << "7.Close the program" << endl;
         cout << " " << endl;
-        cout << "Wybierz: ";
+        cout << "Choose: ";
         cin >> menu;
         cout << " " << endl;
 
@@ -56,211 +58,203 @@ int main()
 
         case 1:
         {
-            cout << "Wpisz produkt: ";
-            cin >> produkt;
-            fstream plik;
-            plik.open("lista_zakupow.txt", ios::out | ios::app);
-            plik << produkt << endl;
-            plik.close();
+            cout << "Enter product: ";
+            cin >> product;
+            fstream file;
+            file.open("shopping_list.txt", ios::out | ios::app);
+            file << product << endl;
+            file.close();
             cout << " " << endl;
-            cout << "Dodano do listy:" << endl;
+            cout << "Added to list:" << endl;
             cout << " " << endl;
             {
-                string linia;
+                string line;
                 int nr = 1;
-                fstream plik;
-                plik.open("lista_zakupow.txt",ios::in);
-                if(plik.good()==false)
+                fstream file;
+                file.open("shopping_list.txt",ios::in);
+                if(file.good()==false)
                 {
-                    cout<<"Lista zakupow nie istnieje!";
+                    cout<<"Shopping list does not exist!";
                     exit(0);
                 }
-                while (getline(plik, linia))
+                while (getline(file, line))
                 {
-                    cout << nr << ". " << linia << endl;
+                    cout << nr << ". " << line << endl;
                     nr++;
                 }
-                plik.close();
+                file.close();
             }
-            getchar();
         }
-
         break;
-
         case 2:
         {
-            string nazwaPliku = "lista_zakupow.txt";
+            string filename = "shopping_list.txt";
 
-            wyswietlListeProduktow(nazwaPliku);
+            showproductlist(filename);
 
-            int usunprodukt;
-            cout << "Podaj numer produktu do usuniêcia: ";
-            cin >> usunprodukt;
+            int deleteproduct;
+            cout << "Enter the product number to remove: ";
+            cin >> deleteproduct;
 
-            fstream plik;
-            plik.open(nazwaPliku, ios::in);
+            fstream file;
+            file.open(filename, ios::in);
 
-            ofstream tymczplik("tymczplik.txt");
-            string linia;
+            ofstream tmpfile("tmpfile.txt");
+            string line;
             int nr = 1;
 
-            if (plik.is_open() && tymczplik.is_open())
+            if (file.is_open() && tmpfile.is_open())
             {
-                while (getline(plik, linia))
+                while (getline(file, line))
                 {
-                    if (nr != usunprodukt)
+                    if (nr != deleteproduct)
                     {
-                        tymczplik << linia << endl;
+                        tmpfile << line << endl;
                     }
                     nr++;
                 }
-                plik.close();
-                tymczplik.close();
+                file.close();
+                tmpfile.close();
 
-                remove(nazwaPliku.c_str());
-                rename("tymczplik.txt", nazwaPliku.c_str());
+                remove(filename.c_str());
+                rename("tmpfile.txt", filename.c_str());
             }
             else
             {
-                cout << "Nie mo¿na otworzyæ pliku!" << endl;
+                cout << "Unable to open the file!" << endl;
             }
-            getchar();
         }
 
         break;
 
         case 3:
         {
-            string nazwaPliku = "lista_zakupow.txt";
-            wyswietlListeProduktow(nazwaPliku);
-            getchar();
+            string filename = "shopping_list.txt";
+            showproductlist(filename);
         }
 
         break;
 
         case 4:
         {
-            string nazwaPliku = "lista_zakupow.txt";
+            string filename = "shopping_list.txt";
 
-            wyswietlListeProduktow(nazwaPliku);
+            showproductlist(filename);
 
-            int kupionyprodukt;
-            cout << "Podaj numer produktu do oznaczenia jako kupiony: ";
-            cin >> kupionyprodukt;
+            int purchasedproduct;
+            cout << "Enter the product number to mark as purchased: ";
+            cin >> purchasedproduct;
 
-            fstream plik;
-            plik.open(nazwaPliku, ios::in);
+            fstream file;
+            file.open(filename, ios::in);
 
-            ofstream tymczplik("tymczplik.txt");
-            string linia;
+            ofstream tmpfile("tmpfile.txt");
+            string line;
             int nr = 1;
 
-            if (plik.is_open() && tymczplik.is_open())
+            if (file.is_open() && tmpfile.is_open())
             {
-                while (getline(plik, linia))
+                while (getline(file, line))
                 {
-                    if (nr == kupionyprodukt)
+                    if (nr == purchasedproduct)
                     {
-                        tymczplik << linia << "(kupiony)"<< endl;
+                        tmpfile << line << "(purchased)"<< endl;
                     }
                     else
                     {
-                        tymczplik << linia << " " << endl;
+                        tmpfile << line << " " << endl;
                     }
                     nr++;
                 }
 
-                plik.close();
-                tymczplik.close();
+                file.close();
+                tmpfile.close();
 
-                remove(nazwaPliku.c_str());
-                rename("tymczplik.txt", nazwaPliku.c_str());
+                remove(filename.c_str());
+                rename("tmpfile.txt", filename.c_str());
             }
             else
             {
-                cout << "Nie mo¿na otworzyæ pliku!" << endl;
+                cout << "Unable to open the file!" << endl;
             }
-            getchar();
         }
         break;
 
         case 5:
         {
-            string nazwaPliku = "lista_zakupow.txt";
+            string filename = "shopping_list.txt";
 
-            wyswietlListeProduktow(nazwaPliku);
+            showproductlist(filename);
 
-            int kupionyprodukt;
-            cout << "Usun znacznik kupiony z produktu: ";
-            cin >> kupionyprodukt;
+            int purchasedproduct;
+            cout << "Remove the buy tag from the product: ";
+            cin >> purchasedproduct;
 
-            fstream plik;
-            plik.open(nazwaPliku, ios::in);
+            fstream file;
+            file.open(filename, ios::in);
 
-            ofstream tymczplik("tymczplik.txt");
-            string linia;
+            ofstream tmpfile("tmpfile.txt");
+            string line;
             int nr = 1;
 
-            if (plik.is_open() && tymczplik.is_open())
+            if (file.is_open() && tmpfile.is_open())
             {
-                while (getline(plik, linia))
+                while (getline(file, line))
                 {
-                    if (nr == kupionyprodukt)
+                    if (nr == purchasedproduct)
                     {
-                        size_t pozycja = linia.find("(kupiony)");
-                        if (pozycja != string::npos)
+                        size_t pos = line.find("(purchased)");
+                        if (pos != string::npos)
                         {
-                            linia.replace(pozycja,9,1,' ');
+                            line.replace(pos,9,1,' ');
                         }
                     }
                     else
                     {
-                        tymczplik << linia << " " << endl;
+                        tmpfile << line << " " << endl;
                     }
                     nr++;
                 }
-                plik.close();
-                tymczplik.close();
+                file.close();
+                tmpfile.close();
             }
             else
             {
-                cout << "Nie mo¿na otworzyæ pliku!" << endl;
+                cout << "Unable to open the file!" << endl;
             }
-            getchar();
         }
         break;
 
         case 6:
         {
-            string nazwaPliku = "lista_zakupow.txt";
-            string taknie;
+            string filename = "shopping_list.txt";
+            string yn;
 
-            cout << "Czy na pewno chcesz usunac liste zakupow? Napisz TAK lub NIE" << endl;
+            cout << "Are you sure you want to deleteac shopping list? Write YES or NO" << endl;
 
-            cin >> taknie;
+            cin >> yn;
 
-            while (taknie != "TAK" && taknie != "Tak" && taknie != "tak" && taknie != "NIE" && taknie != "Nie" && taknie != "nie")
+            while (yn != "YES" && yn != "Yes" && yn != "yes" && yn != "NO" && yn != "No" && yn != "no")
             {
-                cout << "Nie ma takiej opcji w menu! Napisz TAK lub NIE: ";
-                cin >> taknie;
+                cout << "There is no such option in the menu! Write YES or NO: ";
+                cin >> yn;
             }
-            if (taknie == "TAK" || taknie == "Tak" || taknie == "tak")
+            if (yn == "YES" || yn == "Yes" || yn == "yes")
             {
-                remove(nazwaPliku.c_str());
+                remove(filename.c_str());
                 cout << " " << endl;
-                cout << "Plik zostal usuniety." << endl;
+                cout << "The file has been deleted." << endl;
                 cout << " " << endl;
-                cout << "Dodaj nowy produkt, zeby utworzyc liste zakupow." << endl;
+                cout << "Add a new product to create a shopping list." << endl;
                 cout << " " << endl;
             }
-            if (taknie == "NIE" || taknie == "Nie" || taknie == "nie")
+            if (yn == "NO" || yn == "No" || yn == "no")
             {
                 cout << " " << endl;
-                cout << "Plik nie zostal usuniety." << endl;
+                cout << "The file has not been deleted." << endl;
                 cout << " " << endl;
             }
         }
-        getchar();
         break;
 
         case 7:
@@ -270,12 +264,11 @@ int main()
         break;
 
         default:
-            cout<<"Nie ma takiej opcji w menu!";
-            break;
-
+        {
+            cout<<"There is no such option in the menu!";
         }
-        getchar();
-        system("cls");
+        break;
+        }
     }
     return 0;
 }
